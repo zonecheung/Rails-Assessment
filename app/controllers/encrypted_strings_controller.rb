@@ -17,8 +17,16 @@ class EncryptedStringsController < ApplicationController
   end
 
   def destroy
-    @encrypted_string.destroy!
-    head :ok
+    # NOTE: Previously we assume that .destroy! will always be successful,
+    # =>    but it's also possible to add before_destroy callback, set the
+    # =>    errors, and throw(:abort) to cancel the destroy,
+    # =>    see: https://stackoverflow.com/questions/38625276/rails-5-throw-abort-how-do-i-setup-error-messages
+    if @encrypted_string.destroy
+      head :ok
+    else
+      render json: { message: @encrypted_string.errors.full_messages.to_sentence },
+             status: :unprocessable_entity
+    end
   end
 
   private

@@ -16,7 +16,7 @@ class DataEncryptingKey < ApplicationRecord
   end
 
   def key_encrypting_key
-    ENV['KEY_ENCRYPTING_KEY'] || 'revision' * 4
+    ENV['KEY_ENCRYPTING_KEY'] || 'bluejays' * 4
   end
 
   def self.rotate!
