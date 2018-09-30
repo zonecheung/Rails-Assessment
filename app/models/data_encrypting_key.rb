@@ -1,8 +1,4 @@
 class DataEncryptingKey < ApplicationRecord
-  QUEUED      = 'Key rotation has been queued'
-  IN_PROGRESS = 'Key rotation is in progress'
-  IDLE        = 'No key rotation queued or in progress'
-
   attr_encrypted :key, key: :key_encrypting_key
 
   validates :key, presence: true
@@ -13,10 +9,6 @@ class DataEncryptingKey < ApplicationRecord
 
   def self.generate!(attrs={})
     create!(attrs.merge(key: AES.key))
-  end
-
-  def key_encrypting_key
-    ENV['KEY_ENCRYPTING_KEY'] || 'bluejays' * 4
   end
 
   def self.rotate!
@@ -38,5 +30,9 @@ class DataEncryptingKey < ApplicationRecord
       # Remove all other keys.
       self.where(['id != ?', new_key.id]).destroy_all
     end
+  end
+
+  def key_encrypting_key
+    ENV['KEY_ENCRYPTING_KEY'] || 'bluejays' * 4
   end
 end

@@ -40,6 +40,5 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Need to use this to test ActiveJob::Base.queue_adapter.enqueued_jobs.
-  config.active_job.queue_adapter = :test
+  config.active_job.queue_adapter = :async
 end
