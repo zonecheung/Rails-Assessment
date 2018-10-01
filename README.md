@@ -14,16 +14,17 @@ export KEY_ENCRYPTING_KEY=<32_characters_string>
 
 ## Testing
 
-The app contains both `minitest` and `rspec`. I've added/modified some files in default test suite but I personally prefer to use `rspec` for my projects.
+The app contains both `minitest` and `rspec`. I've added/modified some files in default test suite, but I personally prefer to use `rspec` in my projects.
 
 So, to run the previous test suite: `bin/rails test -b`
+
 To run rspec suite: `rake spec`
 
-The polling integration test is in `spec/requests/zz_data_encrypting_keys_rotation_polling_spec.rb`, it can be run individually using `rspec spec/requests/zz_data_encrypting_keys_rotation_polling_spec.rb`.
+The polling integration test is in `spec/requests/zz_data_encrypting_keys_rotation_polling_spec.rb`.
 
 ## Notes
 
-I use Redis to save the job processing state as well, since we use `sidekiq` for the background job, and we only need to store a state for a single job.
+I use Redis to save the job processing state as well since we already used `sidekiq` for the background job. We only need to store the state of a single job in the assignment.
 
 I also added `rubocop` gem and tried to fix some syntaxes based on the recommendations, run `rubocop` to verify the results.
 
