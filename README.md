@@ -3,10 +3,11 @@
 ## Installation
 
 1. Clone this repo.
-2. Change the database configuration in `config/database.yml`.
-3. Run `rake db:setup` to create the database, tables, and generate default seeds.
-4. Make sure Redis is installed and running at default port (perhaps 6379?).
-5. Remember to set the `KEY_ENCRYPTING_KEY` environment variable beforehand.
+2. Run `bundle install` to install the gems.
+3. Change the database configuration in `config/database.yml`.
+4. Run `rake db:setup` to create the database, tables, and generate default seeds.
+5. Make sure Redis is installed and running at default port (perhaps 6379?).
+6. Remember to set the `KEY_ENCRYPTING_KEY` environment variable beforehand.
 
 ```
 export KEY_ENCRYPTING_KEY=<32_characters_string>
@@ -24,7 +25,7 @@ The polling integration test is in `spec/requests/zz_data_encrypting_keys_rotati
 
 ## Notes
 
-I use Redis to save the job processing state as well since we already used `sidekiq` for the background job. We only need to store the state of a single job in the assignment.
+I use Redis to save the job processing state since we already used `sidekiq` for the background job. We only need to store the state of a single job in the assignment.
 
 I also added `rubocop` gem and tried to fix some syntaxes based on the recommendations, run `rubocop` to verify the results.
 
