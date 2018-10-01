@@ -15,7 +15,7 @@ export KEY_ENCRYPTING_KEY=<32_characters_string>
 
 ## Testing
 
-The app contains both `minitest` and `rspec`. I've added/modified some files in default test suite, but I personally prefer to use `rspec` in my projects.
+The app contains tests for both `minitest` and `rspec`. I've added/modified some files in default test suite, but I personally prefer to use `rspec` in my projects.
 
 So, to run the previous test suite: `bin/rails test -b`
 
