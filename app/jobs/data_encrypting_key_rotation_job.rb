@@ -1,24 +1,28 @@
+# frozen_string_literal: true
+
 class DataEncryptingKeyRotationJob < ApplicationJob
   KEY = "#{Rails.env}:active_jobs:data_encrypting_key_rotation_job"
+
   IDLE        = 'No key rotation queued or in progress'
   QUEUED      = 'Key rotation has been queued'
   IN_PROGRESS = 'Key rotation is in progress'
+  MESSAGES    = [IDLE, QUEUED, IN_PROGRESS].freeze
 
   queue_as :default
 
   # NOTE: This is just a way to set the state of the job, we can use a
   # =>    different method if we like.
-  after_enqueue  do |job|
-    DataEncryptingKeyRotationJob.set_rotation_status('queued')
+  after_enqueue do |_job|
+    DataEncryptingKeyRotationJob.update_rotation_status('queued')
   end
-  before_perform do |job|
-    DataEncryptingKeyRotationJob.set_rotation_status('in progress')
+  before_perform do |_job|
+    DataEncryptingKeyRotationJob.update_rotation_status('in progress')
   end
-  after_perform  do |job|
+  after_perform do |_job|
     DataEncryptingKeyRotationJob.clear_rotation_status
   end
 
-  def self.set_rotation_status(status)
+  def self.update_rotation_status(status)
     _redis.set(KEY, status)
   end
 
@@ -45,13 +49,15 @@ class DataEncryptingKeyRotationJob < ApplicationJob
     DataEncryptingKey.rotate!
   end
 
-  private
+  class << self
+    private
 
-  def self._redis
-    if defined?(@@_redis)
-      @@_redis
-    else
-      @@_redis = Redis.new
+    def _redis
+      if defined?(@@_redis)
+        @@_redis
+      else
+        @@_redis = Redis.new
+      end
     end
   end
 end

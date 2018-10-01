@@ -7,7 +7,7 @@ class DataEncryptingKey < ApplicationRecord
     find_by(primary: true)
   end
 
-  def self.generate!(attrs={})
+  def self.generate!(attrs = {})
     create!(attrs.merge(key: AES.key))
   end
 
@@ -33,6 +33,6 @@ class DataEncryptingKey < ApplicationRecord
   end
 
   def key_encrypting_key
-    ENV['KEY_ENCRYPTING_KEY'] || 'bluejays' * 4
+    ENV['KEY_ENCRYPTING_KEY']
   end
 end

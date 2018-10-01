@@ -10,7 +10,7 @@ describe 'DataEncryptingKey rotation', type: :request do
 
     expect(response).to have_http_status(200)
     expect(response.body).to eql(
-      { message: 'No key rotation queued or in progress' }.to_json
+      { message: DataEncryptingKeyRotationJob::IDLE }.to_json
     )
   end
 
@@ -19,13 +19,19 @@ describe 'DataEncryptingKey rotation', type: :request do
 
     expect(response).to have_http_status(200)
     expect(response.body).to eql(
-      { message: 'Key rotation has been queued' }.to_json
+      { message: DataEncryptingKeyRotationJob::QUEUED }.to_json
     )
   end
 
-  describe 'when a rotate request has been submitted' do
+  describe 'when a rotate request has been submitted',
+           perform_enqueued_at: true, skip_db_cleaner: true do
     before(:each) do
+      ActiveJob::Base.queue_adapter = :async
       post '/data_encrypting_keys/rotate'
+    end
+
+    after(:each) do
+      ActiveJob::Base.queue_adapter = :test
     end
 
     it 'should return queued message when checking the status' do
@@ -33,7 +39,7 @@ describe 'DataEncryptingKey rotation', type: :request do
 
       expect(response).to have_http_status(200)
       expect(response.body).to eql(
-        { message: 'Key rotation has been queued' }.to_json
+        { message: DataEncryptingKeyRotationJob::QUEUED }.to_json
       )
     end
 
@@ -42,7 +48,7 @@ describe 'DataEncryptingKey rotation', type: :request do
 
       expect(response).to have_http_status(422)
       expect(response.body).to eql(
-        { message: 'Key rotation has been queued' }.to_json
+        { message: DataEncryptingKeyRotationJob::QUEUED }.to_json
       )
     end
 
@@ -52,7 +58,7 @@ describe 'DataEncryptingKey rotation', type: :request do
 
       expect(response).to have_http_status(200)
       expect(response.body).to eql(
-        { message: 'No key rotation queued or in progress' }.to_json
+        { message: DataEncryptingKeyRotationJob::IDLE }.to_json
       )
     end
   end

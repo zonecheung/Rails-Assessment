@@ -21,8 +21,8 @@ class DataEncryptingKeysController < ApplicationController
   end
 
   def reject_job_if_exists
-    if @message != DataEncryptingKeyRotationJob::IDLE
-      render json: { message: @message }, status: :unprocessable_entity
-    end
+    return if @message == DataEncryptingKeyRotationJob::IDLE
+
+    render json: { message: @message }, status: :unprocessable_entity
   end
 end

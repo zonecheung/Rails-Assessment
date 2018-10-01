@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 def setup_encrypted_strings(data_key, size = 5)
-  1.upto(size) do |n|
+  1.upto(size) do |_n|
     FactoryBot.create(:encrypted_string,
                       value: 'My Heart Will Go On',
                       data_encrypting_key: data_key)
@@ -22,9 +22,9 @@ describe DataEncryptingKey, 'rotate!', type: :model do
   end
 
   it 'should have correct data_encrypting_key and value in encrypted strings' do
-    EncryptedString.find_each do |ec|
-      expect(ec.value).to eql('My Heart Will Go On')
-      expect(ec.data_encrypting_key_id).to eql(data_key.id)
+    EncryptedString.find_each do |es|
+      expect(es.value).to eql('My Heart Will Go On')
+      expect(es.data_encrypting_key_id).to eql(data_key.id)
     end
   end
 
@@ -40,9 +40,9 @@ describe DataEncryptingKey, 'rotate!', type: :model do
     end
 
     it 'should change the data_encrypting_key_id in encrypted strings' do
-      EncryptedString.find_each do |ec|
-        expect(ec.value).to eql('My Heart Will Go On')
-        expect(ec.data_encrypting_key_id).to eql(new_data_key.id)
+      EncryptedString.find_each do |es|
+        expect(es.value).to eql('My Heart Will Go On')
+        expect(es.data_encrypting_key_id).to eql(new_data_key.id)
       end
     end
   end
@@ -66,15 +66,15 @@ describe DataEncryptingKey, 'rotate!', type: :model do
 
     it 'should not change the data_encrypting_key_id in encrypted strings' do
       original_data_key = data_key
-      lambda { DataEncryptingKey.rotate! }
-      EncryptedString.find_each do |ec|
-        expect(ec.value).to eql('My Heart Will Go On')
-        expect(ec.data_encrypting_key_id).to eql(original_data_key.id)
+      -> { DataEncryptingKey.rotate! }
+      EncryptedString.find_each do |es|
+        expect(es.value).to eql('My Heart Will Go On')
+        expect(es.data_encrypting_key_id).to eql(original_data_key.id)
       end
     end
 
     it 'should not change the encrypted strings size' do
-      lambda { DataEncryptingKey.rotate! }
+      -> { DataEncryptingKey.rotate! }
       expect(EncryptedString.count).to eql(10)
     end
   end

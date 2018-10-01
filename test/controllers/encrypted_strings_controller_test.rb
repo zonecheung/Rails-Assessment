@@ -61,8 +61,15 @@ class EncryptedStringsControllerTest < ActionController::TestCase
 
   def setup_mock_for_destroy
     mock = Minitest::Mock.new
-    def mock.destroy; false; end
-    def mock.nil?; false; end
+
+    def mock.destroy
+      false
+    end
+
+    def mock.nil?
+      false
+    end
+
     def mock.errors
       errors_mock = Minitest::Mock.new
       def errors_mock.full_messages

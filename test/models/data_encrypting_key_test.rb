@@ -32,7 +32,7 @@ class DataEncryptingKeyTest < ActiveSupport::TestCase
 
   test '.rotate!' do
     data_key = generate_primary
-    size = DataEncryptingKey.count    # 2 in fixtures + 1 primary.
+    size = DataEncryptingKey.count # 2 in fixtures + 1 primary.
     assert_not_equal 1, size
 
     # It should reduce the size.
@@ -44,8 +44,8 @@ class DataEncryptingKeyTest < ActiveSupport::TestCase
   end
 
   def generate_encrypted_strings(size = 5)
-    encrypted_strings.each(&:destroy)   # Clean up the fixtures first.
-    1.upto(size) do |n|
+    encrypted_strings.each(&:destroy) # Clean up the fixtures first.
+    1.upto(size) do |_n|
       EncryptedString.create!(value: 'My Heart Will Go On')
     end
   end

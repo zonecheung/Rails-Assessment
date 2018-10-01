@@ -1,5 +1,5 @@
 class EncryptedStringsController < ApplicationController
-  before_action :load_encrypted_string, only: [:show, :destroy]
+  before_action :load_encrypted_string, only: %i[show destroy]
 
   def create
     encrypted_string = EncryptedString.new(encrypted_string_params)
@@ -7,8 +7,10 @@ class EncryptedStringsController < ApplicationController
     if encrypted_string.save
       render json: { token: encrypted_string.token }
     else
-      render json: { message: encrypted_string.errors.full_messages.to_sentence },
-             status: :unprocessable_entity
+      render(
+        json: { message: encrypted_string.errors.full_messages.to_sentence },
+        status: :unprocessable_entity
+      )
     end
   end
 
@@ -24,8 +26,10 @@ class EncryptedStringsController < ApplicationController
     if @encrypted_string.destroy
       head :ok
     else
-      render json: { message: @encrypted_string.errors.full_messages.to_sentence },
-             status: :unprocessable_entity
+      render(
+        json: { message: @encrypted_string.errors.full_messages.to_sentence },
+        status: :unprocessable_entity
+      )
     end
   end
 
@@ -33,10 +37,11 @@ class EncryptedStringsController < ApplicationController
 
   def load_encrypted_string
     @encrypted_string = EncryptedString.find_by(token: params[:token])
-    if @encrypted_string.nil?
-      render json: { messsage: "No entry found for token #{params[:token]}" },
-             status: :not_found
-    end
+
+    return unless @encrypted_string.nil?
+
+    render json: { messsage: "No entry found for token #{params[:token]}" },
+           status: :not_found
   end
 
   def encrypted_string_params
